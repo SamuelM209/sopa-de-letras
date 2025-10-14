@@ -1,0 +1,40 @@
+:root {
+  --tam: 28px;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f6f8fa;
+  color: #222;
+  margin: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+main {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+#matriz {
+  font-family: monospace;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 12px;
+  display: inline-block;
+  margin: 12px 0;
+  text-align: left;
+  white-space: pre;
+}
+
+#lista-palabras, #resultado-lista {
+  list-style: none;
+  padding: 0;
+  display: inline-block;
+  text-align: left;
+}
+
+#lista-palabras li { font-weight: 600; color: #111; }
+#resultado-lista li { margin: 4px 0; }
+button { margin-top: 12px; padding: 8px 14px; cursor: pointer; }
