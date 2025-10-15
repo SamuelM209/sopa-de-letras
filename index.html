@@ -3,29 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sopa de Letras 14x14</title>
+  <title>Sopa de Letras - Animales</title>
   <link rel="stylesheet" href="styles/styles.css" />
 </head>
 <body>
   <main>
-    <h1>Sopa de Letras 14x14</h1>
-
-    <section id="palabras-section">
-      <h3>Palabras a buscar:</h3>
-      <ul id="lista-palabras"></ul>
-    </section>
+    <h1>Sopa de Letras - Animales 🐾</h1>
 
     <section id="juego">
-      <h3>Matriz (separada por comas):</h3>
-      <pre id="matriz"></pre>
+      <h3>Encuentra los 8 animales escondidos:</h3>
+      <div id="tablero" class="grid"></div>
+    </section>
+
+    <section id="entrada">
+      <h3>Escribe una palabra encontrada:</h3>
+      <input type="text" id="inputPalabra" placeholder="Escribe la palabra..." />
+      <button id="btnVerificar">Verificar</button>
+      <p id="mensaje"></p>
+      <button id="btnTerminado">Terminado</button>
     </section>
 
     <section id="resultado">
-      <h3>Resultados:</h3>
+      <h3>Resultados finales:</h3>
       <ul id="resultado-lista"></ul>
     </section>
-
-    <button id="btnVerificar">Verificar Palabras</button>
   </main>
 
   <script src="scripts/script.js" type="module"></script>

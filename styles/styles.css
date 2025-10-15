@@ -1,40 +1,54 @@
-:root {
-  --tam: 28px;
-}
-
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f6f8fa;
-  color: #222;
-  margin: 24px;
-  display: flex;
-  justify-content: center;
-}
-
-main {
-  max-width: 900px;
-  width: 100%;
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
   text-align: center;
+  padding: 20px;
 }
 
-#matriz {
-  font-family: monospace;
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 12px;
-  display: inline-block;
-  margin: 12px 0;
-  text-align: left;
-  white-space: pre;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(14, 30px);
+  gap: 3px;
+  justify-content: center;
+  margin: 20px auto;
 }
 
-#lista-palabras, #resultado-lista {
-  list-style: none;
-  padding: 0;
-  display: inline-block;
-  text-align: left;
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
-#lista-palabras li { font-weight: 600; color: #111; }
-#resultado-lista li { margin: 4px 0; }
-button { margin-top: 12px; padding: 8px 14px; cursor: pointer; }
+.cell.subrayada {
+  background-color: yellow;
+  text-decoration: underline;
+}
+
+button {
+  margin: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  border: none;
+  background-color: #0078d7;
+  color: white;
+  border-radius: 6px;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+#mensaje {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#resultado {
+  margin-top: 20px;
+}
