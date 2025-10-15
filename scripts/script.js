@@ -1,4 +1,4 @@
-// script.js — versión final sin borrar marcas anteriores y manteniendo las palabras correctas en verde
+
 
 const tamaño = 14;
 const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -13,7 +13,6 @@ const direcciones = [
   [1, 1], [1, -1], [-1, 1], [-1, -1]
 ];
 
-// Generar la sopa
 function generarSopa() {
   tablero = Array.from({ length: tamaño }, () => Array(tamaño).fill(""));
   wordPositions = {};
@@ -64,7 +63,7 @@ function puedeColocar(palabra, fila, col, dx, dy) {
   return true;
 }
 
-// Mostrar tablero
+
 function mostrarTablero() {
   const contenedor = document.getElementById("tablero");
   contenedor.innerHTML = "";
@@ -81,7 +80,7 @@ function mostrarTablero() {
     }
   }
 
-  // Mostrar lista de palabras
+
   const ul = document.getElementById("lista-palabras");
   ul.innerHTML = "";
   palabras.forEach(p => {
@@ -94,7 +93,7 @@ function mostrarTablero() {
   prepararSeleccion();
 }
 
-// --- SELECCIÓN CON MOUSE ---
+
 let seleccionActiva = false;
 let seleccion = [];
 let inicioCell = null;
@@ -187,12 +186,12 @@ function verificarPalabra(palabra) {
   }
 }
 
-// Limpia solo la selección temporal azul
+
 function limpiarSeleccionTemporal() {
   document.querySelectorAll(".seleccionada").forEach(c => c.classList.remove("seleccionada"));
 }
 
-// Al hacer clic en "Terminado"
+
 document.getElementById("btnTerminado").addEventListener("click", () => {
   const resultado = document.getElementById("resultado-lista");
   resultado.innerHTML = "";

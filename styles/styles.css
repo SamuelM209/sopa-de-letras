@@ -84,17 +84,17 @@ button:hover {
 }
 
 .cell.seleccionada {
-  background-color: #add8ff; /* azul temporal */
+  background-color: #add8ff; 
 }
 
 .cell.encontrada {
-  background-color: #9df59d; /* verde */
+  background-color: #9df59d; 
   color: #064b06;
   text-decoration: underline;
 }
 
 .cell.faltante {
-  background-color: #ffcc80; /* naranja suave */
+  background-color: #ffcc80; 
 }
 
 #mensaje {
@@ -102,7 +102,3 @@ button:hover {
   margin-top: 8px;
 }
 
-#lista-palabras li.encontrada {
-  color: green;
-  text-decoration: line-through;
-}
