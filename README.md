@@ -126,8 +126,11 @@ Se listan en un cuadro de resumen.
 ## Autor
 
 Samuel Moncada Pulgarín
+
 Brayan Sneider Velez
+
 Estudiantes de Tecnología en Desarrollo de Software
+
 Proyecto académico para reforzar conocimientos en:
 
 Manipulación del DOM
@@ -138,9 +141,8 @@ Validación lógica y estructuras bidimensionales
 
 Diseño de interfaces interactivas con JavaScript
 
-📅 Versión: 1.0
-📍 Repositorio: https://github.com/SamuelM209/sopa-de-letras
-
-📜 Licencia
+ Versión: 1.0
+ Repositorio: https://github.com/SamuelM209/sopa-de-letras
+ Licencia
 
 Este proyecto se distribuye bajo la licencia MIT, lo que permite su uso, modificación y distribución con fines educativos o personales.
