@@ -10,18 +10,18 @@
   <main>
     <h1>Sopa de Letras - Animales 🐾</h1>
 
-    <section id="juego">
-      <h3>Encuentra los 8 animales escondidos:</h3>
-      <div id="tablero" class="grid"></div>
-    </section>
+    <div class="contenedor">
+      <section id="juego">
+        <div id="tablero" class="grid"></div>
+      </section>
 
-    <section id="entrada">
-      <h3>Escribe una palabra encontrada:</h3>
-      <input type="text" id="inputPalabra" placeholder="Escribe la palabra..." />
-      <button id="btnVerificar">Verificar</button>
-      <p id="mensaje"></p>
-      <button id="btnTerminado">Terminado</button>
-    </section>
+      <section id="panel">
+        <h3>Palabras a buscar:</h3>
+        <ul id="lista-palabras"></ul>
+        <p id="mensaje"></p>
+        <button id="btnTerminado">Terminado</button>
+      </section>
+    </div>
 
     <section id="resultado">
       <h3>Resultados finales:</h3>

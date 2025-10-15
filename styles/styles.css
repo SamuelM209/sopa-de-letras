@@ -5,6 +5,12 @@ body {
   padding: 20px;
 }
 
+.contenedor {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(14, 30px);
@@ -23,15 +29,20 @@ body {
   background-color: white;
   font-weight: bold;
   text-transform: uppercase;
+  user-select: none;
+  cursor: pointer;
+}
+
+.cell.seleccionada {
+  background-color: lightblue;
 }
 
 .cell.subrayada {
   background-color: yellow;
-  text-decoration: underline;
 }
 
 button {
-  margin: 5px;
+  margin-top: 10px;
   padding: 8px 15px;
   cursor: pointer;
   border: none;
@@ -44,11 +55,54 @@ button:hover {
   background-color: #005fa3;
 }
 
+#lista-palabras {
+  text-align: left;
+  margin-top: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+#lista-palabras li.encontrada {
+  text-decoration: line-through;
+  color: green;
+}
+
 #mensaje {
   font-weight: bold;
   margin-top: 10px;
 }
 
-#resultado {
-  margin-top: 20px;
+.cell {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.cell.seleccionada {
+  background-color: #add8ff; /* azul temporal */
+}
+
+.cell.encontrada {
+  background-color: #9df59d; /* verde */
+  color: #064b06;
+  text-decoration: underline;
+}
+
+.cell.faltante {
+  background-color: #ffcc80; /* naranja suave */
+}
+
+#mensaje {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+#lista-palabras li.encontrada {
+  color: green;
+  text-decoration: line-through;
 }

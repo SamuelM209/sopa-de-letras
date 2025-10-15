@@ -1,157 +1,215 @@
-const TAM = 14;
+// script.js — versión final sin borrar marcas anteriores y manteniendo las palabras correctas en verde
+
+const tamaño = 14;
 const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const animales = ["GATO", "PERRO", "LEON", "TIGRE", "CABALLO", "OSO", "ZORRO", "RANA"];
+const palabras = ["GATO", "PERRO", "ELEFANTE", "ZORRO", "LAGARTO", "OSO", "MONO", "RATON"];
 
-let tablero = Array.from({ length: TAM }, () => Array(TAM).fill(""));
-let palabrasEncontradas = [];
+let tablero = [];
+let wordPositions = {};
+let palabrasEncontradas = new Set();
 
-// DIRECCIONES: derecha, izquierda, abajo, arriba, y diagonales
 const direcciones = [
   [0, 1], [0, -1], [1, 0], [-1, 0],
   [1, 1], [1, -1], [-1, 1], [-1, -1]
 ];
 
-// Generar la sopa de letras
+// Generar la sopa
 function generarSopa() {
-  animales.forEach(palabra => colocarPalabra(palabra));
+  tablero = Array.from({ length: tamaño }, () => Array(tamaño).fill(""));
+  wordPositions = {};
+  palabrasEncontradas.clear();
 
-  // Rellenar los espacios vacíos
-  for (let i = 0; i < TAM; i++) {
-    for (let j = 0; j < TAM; j++) {
-      if (!tablero[i][j]) tablero[i][j] = letras[Math.floor(Math.random() * letras.length)];
+  for (const palabra of palabras) colocarPalabra(palabra);
+
+  for (let i = 0; i < tamaño; i++) {
+    for (let j = 0; j < tamaño; j++) {
+      if (!tablero[i][j]) tablero[i][j] = letras.charAt(Math.floor(Math.random() * letras.length));
     }
   }
 
   mostrarTablero();
 }
 
-// Colocar palabra en una dirección aleatoria
 function colocarPalabra(palabra) {
   let colocada = false;
   let intentos = 0;
 
   while (!colocada && intentos < 500) {
-    const [dx, dy] = direcciones[Math.floor(Math.random() * direcciones.length)];
-    const fila = Math.floor(Math.random() * TAM);
-    const col = Math.floor(Math.random() * TAM);
-
-    if (puedeColocar(palabra, fila, col, dx, dy)) {
-      for (let k = 0; k < palabra.length; k++) {
-        tablero[fila + k * dx][col + k * dy] = palabra[k];
-      }
-      colocada = true;
-    }
-
     intentos++;
+    const [dx, dy] = direcciones[Math.floor(Math.random() * direcciones.length)];
+    const fila = Math.floor(Math.random() * tamaño);
+    const col = Math.floor(Math.random() * tamaño);
+
+    if (!puedeColocar(palabra, fila, col, dx, dy)) continue;
+
+    const coords = [];
+    for (let k = 0; k < palabra.length; k++) {
+      const x = fila + k * dx;
+      const y = col + k * dy;
+      tablero[x][y] = palabra[k];
+      coords.push([x, y]);
+    }
+    wordPositions[palabra] = coords;
+    colocada = true;
   }
 }
 
-// Validar que se pueda colocar
 function puedeColocar(palabra, fila, col, dx, dy) {
   for (let k = 0; k < palabra.length; k++) {
     const x = fila + k * dx;
     const y = col + k * dy;
-    if (x < 0 || x >= TAM || y < 0 || y >= TAM) return false;
-    if (tablero[x][y] && tablero[x][y] !== "" && tablero[x][y] !== palabra[k]) return false;
+    if (x < 0 || x >= tamaño || y < 0 || y >= tamaño) return false;
+    if (tablero[x][y] && tablero[x][y] !== palabra[k] && tablero[x][y] !== "") return false;
   }
   return true;
 }
 
-// Mostrar la sopa en pantalla
+// Mostrar tablero
 function mostrarTablero() {
   const contenedor = document.getElementById("tablero");
   contenedor.innerHTML = "";
+  contenedor.style.gridTemplateColumns = `repeat(${tamaño}, 32px)`;
 
-  for (let i = 0; i < TAM; i++) {
-    for (let j = 0; j < TAM; j++) {
-      const cell = document.createElement("div");
-      cell.textContent = tablero[i][j];
-      cell.classList.add("cell");
-      cell.dataset.fila = i;
-      cell.dataset.col = j;
-      contenedor.appendChild(cell);
+  for (let i = 0; i < tamaño; i++) {
+    for (let j = 0; j < tamaño; j++) {
+      const celda = document.createElement("div");
+      celda.classList.add("cell");
+      celda.textContent = tablero[i][j];
+      celda.dataset.row = i;
+      celda.dataset.col = j;
+      contenedor.appendChild(celda);
     }
   }
+
+  // Mostrar lista de palabras
+  const ul = document.getElementById("lista-palabras");
+  ul.innerHTML = "";
+  palabras.forEach(p => {
+    const li = document.createElement("li");
+    li.id = `pal-${p}`;
+    li.textContent = p;
+    ul.appendChild(li);
+  });
+
+  prepararSeleccion();
 }
 
-// Buscar una palabra y marcarla
-function buscarYSubrayar(palabra) {
-  palabra = palabra.toUpperCase();
+// --- SELECCIÓN CON MOUSE ---
+let seleccionActiva = false;
+let seleccion = [];
+let inicioCell = null;
 
-  for (let i = 0; i < TAM; i++) {
-    for (let j = 0; j < TAM; j++) {
-      for (const [dx, dy] of direcciones) {
-        let x = i, y = j, k;
+function prepararSeleccion() {
+  const celdas = document.querySelectorAll(".cell");
 
-        for (k = 0; k < palabra.length; k++) {
-          if (
-            x < 0 || x >= TAM || y < 0 || y >= TAM ||
-            tablero[x][y] !== palabra[k]
-          ) break;
-          x += dx;
-          y += dy;
-        }
+  celdas.forEach(cell => {
+    cell.addEventListener("mousedown", e => {
+      e.preventDefault();
+      seleccionActiva = true;
+      seleccion = [cell];
+      inicioCell = cell;
+      cell.classList.add("seleccionada");
+    });
 
-        if (k === palabra.length) {
-          subrayarPalabra(i, j, dx, dy, palabra.length);
-          return true;
-        }
+    cell.addEventListener("mouseenter", e => {
+      if (seleccionActiva && !seleccion.includes(cell)) {
+        seleccion.push(cell);
+        cell.classList.add("seleccionada");
       }
-    }
-  }
-  return false;
+    });
+
+    cell.addEventListener("mouseup", e => {
+      if (!seleccionActiva) return;
+      seleccionActiva = false;
+
+      const finCell = cell;
+      const palabra = obtenerPalabra(inicioCell, finCell);
+      verificarPalabra(palabra);
+      limpiarSeleccionTemporal();
+    });
+  });
+
+  document.addEventListener("mouseup", () => (seleccionActiva = false));
 }
 
-// Subrayar las celdas correctas
-function subrayarPalabra(fila, col, dx, dy, longitud) {
-  for (let k = 0; k < longitud; k++) {
-    const x = fila + k * dx;
-    const y = col + k * dy;
-    const cell = document.querySelector(`[data-fila="${x}"][data-col="${y}"]`);
-    cell.classList.add("subrayada");
+function obtenerPalabra(inicioCell, finCell) {
+  const i1 = parseInt(inicioCell.dataset.row);
+  const j1 = parseInt(inicioCell.dataset.col);
+  const i2 = parseInt(finCell.dataset.row);
+  const j2 = parseInt(finCell.dataset.col);
+
+  const dx = Math.sign(i2 - i1);
+  const dy = Math.sign(j2 - j1);
+
+  const esLineaValida = dx === 0 || dy === 0 || Math.abs(dx) === Math.abs(dy);
+  if (!esLineaValida) return "";
+
+  let x = i1, y = j1;
+  const letrasSel = [];
+  while (true) {
+    const celda = document.querySelector(`[data-row="${x}"][data-col="${y}"]`);
+    if (!celda) break;
+    letrasSel.push(celda.textContent);
+    if (x === i2 && y === j2) break;
+    x += dx;
+    y += dy;
   }
+  return letrasSel.join("");
 }
 
-// Verificar palabra ingresada
-document.getElementById("btnVerificar").addEventListener("click", () => {
-  const input = document.getElementById("inputPalabra");
+function verificarPalabra(palabra) {
   const mensaje = document.getElementById("mensaje");
-  const palabra = input.value.trim().toUpperCase();
+  const invertida = palabra.split("").reverse().join("");
+  const correcta = palabras.find(p => p === palabra || p === invertida);
 
-  if (!palabra) return;
-
-  if (animales.includes(palabra)) {
-    if (!palabrasEncontradas.includes(palabra)) {
-      const encontrada = buscarYSubrayar(palabra);
-      if (encontrada) {
-        palabrasEncontradas.push(palabra);
-        mensaje.textContent = `✅ "${palabra}" encontrada!`;
-        mensaje.style.color = "green";
-      }
-    } else {
-      mensaje.textContent = `⚠️ "${palabra}" ya fue encontrada.`;
+  if (correcta) {
+    if (palabrasEncontradas.has(correcta)) {
+      mensaje.textContent = `⚠️ "${correcta}" ya fue encontrada.`;
       mensaje.style.color = "orange";
+      return;
     }
+
+    palabrasEncontradas.add(correcta);
+    const coords = wordPositions[correcta];
+    coords.forEach(([r, c]) => {
+      const cel = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+      if (cel) cel.classList.add("encontrada");
+    });
+
+    const li = document.getElementById(`pal-${correcta}`);
+    if (li) li.classList.add("encontrada");
+
+    mensaje.textContent = `✅ "${correcta}" encontrada.`;
+    mensaje.style.color = "green";
   } else {
-    mensaje.textContent = `❌ "${palabra}" no está en la lista de animales.`;
+    mensaje.textContent = `❌ "${palabra}" no es correcta.`;
     mensaje.style.color = "red";
   }
+}
 
-  input.value = "";
-});
+// Limpia solo la selección temporal azul
+function limpiarSeleccionTemporal() {
+  document.querySelectorAll(".seleccionada").forEach(c => c.classList.remove("seleccionada"));
+}
 
-// Mostrar resultados finales
+// Al hacer clic en "Terminado"
 document.getElementById("btnTerminado").addEventListener("click", () => {
-  const ul = document.getElementById("resultado-lista");
-  ul.innerHTML = "";
+  const resultado = document.getElementById("resultado-lista");
+  resultado.innerHTML = "";
 
-  const noEncontradas = animales.filter(p => !palabrasEncontradas.includes(p));
+  const faltantes = palabras.filter(p => !palabrasEncontradas.has(p));
+  faltantes.forEach(p => {
+    const coords = wordPositions[p];
+    coords.forEach(([r, c]) => {
+      const cel = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+      if (cel && !cel.classList.contains("encontrada")) cel.classList.add("faltante");
+    });
+  });
 
-  ul.innerHTML = `
-    <li><strong>Encontradas (${palabrasEncontradas.length}):</strong> ${palabrasEncontradas.join(", ") || "Ninguna"}</li>
-    <li><strong>No encontradas (${noEncontradas.length}):</strong> ${noEncontradas.join(", ") || "Ninguna"}</li>
+  resultado.innerHTML = `
+    <li><strong>Encontradas (${palabrasEncontradas.size}):</strong> ${[...palabrasEncontradas].join(", ") || "Ninguna"}</li>
+    <li><strong>Faltantes (${faltantes.length}):</strong> ${faltantes.join(", ") || "Ninguna"}</li>
   `;
 });
 
-// Inicializar el juego
 generarSopa();
